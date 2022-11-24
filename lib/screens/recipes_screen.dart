@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
-import '../api/mock_fooderlich_service.dart';
+import '../api/get_recipes.dart';
 import '../components/components.dart';
 import '../models/models.dart';
 
 class RecipesScreen extends StatelessWidget {
-  final exploreService = MockFooderlichService();
+  final exploreService = GetRecipe();
 
   RecipesScreen({super.key});
 

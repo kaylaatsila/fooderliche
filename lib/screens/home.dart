@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'explore_screen.dart';
-import 'grocery_screen.dart';
-import 'recipes_screen.dart';
-
-import 'package:provider/provider.dart';
-import '../models/models.dart';
+import '../api/get_recipes.dart';
+import 'screens.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -23,7 +18,7 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   int _selectedIndex = 0;
-  static const String prefSelectedIndexKey = 'selectedIndex';
+  static const String prefSelectedIndexKey = 'selectedTab';
   static List<Widget> pages = <Widget>[
     ExploreScreen(),
     RecipesScreen(),
@@ -48,6 +43,12 @@ class HomeState extends State<Home> {
     }
   }
 
+  // @override
+  // void initstate() {
+  //   super.initState();
+  //   getCurrentIndex();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,21 +67,26 @@ class HomeState extends State<Home> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Theme.of(context).textSelectionTheme.selectionColor,
-        currentIndex: widget.currentTab,
+        // currentIndex: widget.currentTab,
+        currentIndex: _selectedIndex,
         onTap: (index) {
+          GetRecipe.getData();
           setState(() {
             _selectedIndex = index;
           });
           saveCurrentIndex();
-          /*
-          Provider.of<AppStateManager>(context, listen: false).goToTab(index);
-          context.goNamed(
-            'home',
-            params: {
-              'tab': '$index',
-            },
-          );*/
+
+          // Provider.of<AppStateManager>(context, listen: false)
+          // .goToTab(index);
+          // context.goNamed(
+          //   'home',
+          //   params: {
+          //     'tab': '$index',
+          //   },
+          // );
+          // saveCurrentIndex();
         },
+
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.explore),
@@ -97,11 +103,6 @@ class HomeState extends State<Home> {
         ],
       ),
     );
-  }
-
-  void saveCurrentIndex() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(prefSelectedIndexKey, _selectedIndex);
   }
 
   Widget profileButton(int currentTab) {
@@ -121,5 +122,10 @@ class HomeState extends State<Home> {
         },
       ),
     );
+  }
+
+  void saveCurrentIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(prefSelectedIndexKey, _selectedIndex);
   }
 }
