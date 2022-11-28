@@ -1,16 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import '../models/models.dart';
-import '../models/explore_recipe.dart';
 
 class GetRecipe {
   static var URL = 'https://uji.fmipa.unila.ac.id/api-test/recipes.json';
   Future<List<SimpleRecipe>> getRecipes() async {
-    var response = await http.get(Uri.parse('https://uji.fmipa.unila.ac.id/api-test/recipes.json'));
+    var response = await Dio().get(URL);
     if (response.statusCode == 200) {
-      // var data = json.decode(response.body);
-      final Map<String, dynamic> json = jsonDecode(response.body);
-      // Go through each recipe and convert json to SimpleRecipe object.
+      final Map<String, dynamic> json = response.data;
       if (json['recipes'] != null) {
         final recipes = <SimpleRecipe>[];
         json['recipes'].forEach((v) {
